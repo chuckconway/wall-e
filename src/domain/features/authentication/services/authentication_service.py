@@ -7,6 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 
+from src.domain.features.authentication.models.authentication.token import JWToken
 from src.domain.features.authentication.models.authentication.token_data import TokenData
 from src.domain.features.authentication.models.authentication.user import User
 from src.domain.features.authentication.models.authentication.user_in_db import UserInDB
@@ -15,6 +16,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 
+# PW Folsom_800
 fake_users_db = {
     "chuckconway": {
         "username": "chuckconway",
@@ -31,6 +33,27 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
+
+
+async def generate_token(access_token_expires: timedelta, username: str, scope: str = None) -> JWToken:
+    """
+    Generates a JWT Token
+    :param access_token_expires: This takes a timedelta object.
+    :param username: The username of the user requesting the token
+    :param scope: Optional. The scope of the token. Format it as application:read (ex. api:read)
+    :return: JWToken object
+    """
+
+    dict_data = {"sub": username}
+
+    if scope:
+        dict_data["scope"] = scope
+
+    access_token = create_access_token(
+        data=dict_data, expires_delta=access_token_expires
+    )
+
+    return JWToken(access_token=access_token, token_type="bearer")
 
 
 def get_password_hash(password):

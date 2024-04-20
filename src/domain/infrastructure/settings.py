@@ -1,7 +1,10 @@
 import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+dotenv_path = join(dirname(__file__), '.env.local')
+load_dotenv(dotenv_path)
+
 
 class Settings:
 
@@ -17,3 +20,7 @@ class Settings:
     def access_token_expire_minutes():
         return os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
+    @staticmethod
+    def jwt_expire_weeks() -> int:
+        weeks = os.getenv("JWT_TOKEN_EXPIRE_WEEKS")
+        return int(weeks)
