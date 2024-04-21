@@ -1,0 +1,9 @@
+# filebeat.yml
+filebeat.inputs:
+  - type: container
+    paths:
+      - '/var/lib/docker/containers/*/*.log'
+  - type: log
+    enabled: false
+    paths:
+      - /var/log/*.log
