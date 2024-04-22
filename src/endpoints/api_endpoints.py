@@ -1,3 +1,4 @@
+import base64
 from datetime import timedelta
 from fastapi import Depends, HTTPException, status, APIRouter
 from pydantic import BaseModel
@@ -30,7 +31,8 @@ class Item(BaseModel):
 
 
 @router.post("/transcription_formatter/")
-def post_transcription_formatter(item: Item) -> int:
-    l = len(item.transcription)
+def post_transcription_formatter(item: Item) -> str:
+    message_bytes = base64.b64decode(item.transcription)
+    message = message_bytes.decode('utf-8')
 
-    return l
+    return message
