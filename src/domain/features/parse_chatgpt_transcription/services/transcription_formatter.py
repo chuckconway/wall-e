@@ -1,6 +1,8 @@
 import re
 import json
 
+from src.domain.features.parse_chatgpt_transcription.title_summary import TitleSummary
+
 
 # This function takes the output of the create_transcription and chat steps and formats the transcript, summary, and additional info
 def run(steps):
@@ -81,10 +83,16 @@ def run(steps):
     return results
 
 
-def extract_title_and_summary(markdown):
+def extract_title_and_summary(markdown) -> TitleSummary:
     lines = markdown.split('\n')
     title_line = [line for line in lines if line.lstrip().startswith("# Title:")][0]
     title = title_line.lstrip().replace('# Title: ', '')
     lines.remove(title_line)
     summary = '\n'.join(lines)
-    return json.dumps({'title': title, 'summary': summary})
+
+    title_summary = TitleSummary()
+    title_summary.title = title
+    title_summary.summary = summary
+
+    # return json.dumps({'title': title, 'summary': summary})
+    return title_summary
