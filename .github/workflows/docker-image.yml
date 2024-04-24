@@ -7,7 +7,7 @@ on:
 
 env:
   IMAGE_NAME: wall-e
-  REGISTRY: https://ghcr.io
+  REGISTRY: ghcr.io
       
 jobs:
   build-and-push-image:
