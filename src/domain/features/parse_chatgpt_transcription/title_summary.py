@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 
 
-class TitleSummary(BaseModel):
+class SummaryMetadata(BaseModel):
     title: str = ""
     summary: str = ""
+    filename: str

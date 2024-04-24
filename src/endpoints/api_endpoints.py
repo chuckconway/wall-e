@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from src.domain.features.authentication.services.authentication_service import authenticate_user, fake_users_db, \
     generate_token
 from src.domain.features.parse_chatgpt_transcription.services.transcription_formatter import extract_title_and_summary
-from src.domain.features.parse_chatgpt_transcription.title_summary import TitleSummary
+from src.domain.features.parse_chatgpt_transcription.title_summary import SummaryMetadata
 from src.domain.infrastructure.settings import Settings
 
 router = APIRouter(prefix="/api", tags=["api"])
@@ -33,7 +33,7 @@ class Item(BaseModel):
 
 
 @router.post("/transcription_formatter/")
-def post_transcription_formatter(item: Item) -> TitleSummary:
+def post_transcription_formatter(item: Item) -> SummaryMetadata:
     message_bytes = base64.b64decode(item.transcription)
     markdown = message_bytes.decode('utf-8')
 

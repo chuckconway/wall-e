@@ -1,7 +1,7 @@
 import re
 import json
 
-from src.domain.features.parse_chatgpt_transcription.title_summary import TitleSummary
+from src.domain.features.parse_chatgpt_transcription.title_summary import SummaryMetadata
 
 
 # This function takes the output of the create_transcription and chat steps and formats the transcript, summary, and additional info
@@ -83,16 +83,29 @@ def run(steps):
     return results
 
 
-def extract_title_and_summary(markdown) -> TitleSummary:
-    lines = markdown.split('\n')
-    title_line = [line for line in lines if line.lstrip().startswith("# Title:")][0]
-    title = title_line.lstrip().replace('# Title: ', '')
-    lines.remove(title_line)
-    summary = '\n'.join(lines)
+def extract_title_and_summary(markdown) -> SummaryMetadata:
+    # lines = markdown.split('\n')
+    # title_line = [line for line in lines if line.lstrip().startswith("# Title:")][0]
+    # title = title_line.lstrip().replace('# Title: ', '')
+    # lines.remove(title_line)
 
-    title_summary = TitleSummary()
+    title = extract_title(markdown)
+    filename = filter_unsafe_filename_chars(title) + ".md"
+
+    title_summary = SummaryMetadata(filename=filename)
     title_summary.title = title
-    title_summary.summary = summary
+    title_summary.summary = markdown
 
     # return json.dumps({'title': title, 'summary': summary})
     return title_summary
+
+
+def extract_title(markdown_text):
+    lines = markdown_text.split('\n')
+    for i, line in enumerate(lines):
+        if line.strip() == "# Title":
+            return lines[i+1].strip()
+
+
+def filter_unsafe_filename_chars(filename: str) -> str:
+    return "".join(x for x in filename if (x.isalnum() or x in "._- "))
