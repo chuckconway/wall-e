@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - 'v*.*.*'
+
+env:
+  IMAGE_NAME: wall-e
       
 jobs:
   build-and-push-image:
@@ -24,4 +27,6 @@ jobs:
         with:
           context: image/
           push: true
-          tags: ghcr.io/${github.repository}/wall-e:latest
+          tags: |
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{steps.get-tags.outputs.tags }}
+            ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
